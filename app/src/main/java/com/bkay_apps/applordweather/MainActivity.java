@@ -62,6 +62,7 @@ public class MainActivity extends AppCompatActivity {
                     loadData();
                 }
             });
+            dialog.show();
         }
 
     }
@@ -78,7 +79,7 @@ public class MainActivity extends AppCompatActivity {
         NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
 
         boolean isAvailable = false;
-        if (networkInfo.isConnected() && networkInfo != null){
+        if (networkInfo != null && networkInfo.isConnected()){
             isAvailable = true;
         }
         return isAvailable;
@@ -100,18 +101,24 @@ public class MainActivity extends AppCompatActivity {
             try {
                 /*Alternatively I could use LocationManager to get the user's co-ordinates but here
                 I hardcoded the location since I was still developing*/
-                URL url = new URL("http://api.openweathermap.org/data/2.5/weather?lat=-26.2&lon=28.04&appid=2d85c3da1ac08ee612dd16f23db3128a");
+                URL url = new URL("http://api.openweathermap.org/data/2.5/" +
+                        "weather?lat=-26.2&lon=28.04&appid=2d85c3da1ac08ee612dd16f23db3128a");
 
                 HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
 
                 InputStream is = httpURLConnection.getInputStream();
                 BufferedReader br = new BufferedReader(new InputStreamReader(is));
+                StringBuilder stringBuilder = new StringBuilder();
+
                 String line = "";
 
-                while (line != null){
-                    line = br.readLine();
-                    result += line;
+                while ((line = br.readLine()) != null){
+                    stringBuilder.append(line + "\n");
                 }
+
+                JSONObject jsonObject = new JSONObject(stringBuilder.toString());
+                name = jsonObject.getString("name");
+                display.setText(name);
 
             } catch (Exception e) {
                 e.printStackTrace();
@@ -125,7 +132,7 @@ public class MainActivity extends AppCompatActivity {
             //Dismiss the progressBar and show the result
             mProgressBar.setVisibility(View.INVISIBLE);
             //The JSONObject class is giving me a hard time so here I show the JSON formatted data
-            display.setText(result);
+            //display.setText(result);
         }
     }
 
