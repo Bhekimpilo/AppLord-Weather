@@ -3,4 +3,6 @@
     <string name="refresh">Refresh</string>
     <string name="errorTitle">There was an error</string>
     <string name="errorMsg">You seem not to have access to the internet. Please check your settings and try again</string>
+    <string name="exit">Exit</string>
+    <string name="retry">OK</string>
 </resources>

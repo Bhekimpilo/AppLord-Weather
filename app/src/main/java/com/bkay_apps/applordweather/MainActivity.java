@@ -7,16 +7,13 @@ import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -24,17 +21,15 @@ import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
-
-import javax.net.ssl.HttpsURLConnection;
 
 public class MainActivity extends AppCompatActivity {
 
     //Declare our widgets and global variables
-    TextView display;
+    TextView display, temp, humidity, something, label1, label2;
+    ImageView myImage;
     ProgressBar mProgressBar;
-    String name;
+    StringBuilder stringBuilder;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,7 +37,13 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         //Hook them to the activity
-        display = findViewById(R.id.textView);
+        display = findViewById(R.id.cityView);
+        temp = findViewById(R.id.tempView);
+        humidity = findViewById(R.id.humidityView);
+        something = findViewById(R.id.someView);
+        label1 = findViewById(R.id.textView5);
+        label2 = findViewById(R.id.textView6);
+        myImage = findViewById(R.id.iconView);
         mProgressBar = findViewById(R.id.progressBar);
 
         /**Check if internet is available and phone has access then
@@ -55,11 +56,16 @@ public class MainActivity extends AppCompatActivity {
             dialog.setTitle(R.string.errorTitle);
             dialog.setCancelable(true);
             dialog.setMessage(R.string.errorMsg);
-            dialog.setNegativeButton("Exit", null);
-            dialog.setPositiveButton("Retry", new DialogInterface.OnClickListener() {
+            dialog.setNegativeButton(R.string.exit, new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialogInterface, int i) {
-                    loadData();
+                    System.exit(0);
+                }
+            });
+            dialog.setPositiveButton(R.string.retry, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    System.exit(0);
                 }
             });
             dialog.show();
@@ -108,17 +114,13 @@ public class MainActivity extends AppCompatActivity {
 
                 InputStream is = httpURLConnection.getInputStream();
                 BufferedReader br = new BufferedReader(new InputStreamReader(is));
-                StringBuilder stringBuilder = new StringBuilder();
+                stringBuilder = new StringBuilder();
 
                 String line = "";
 
                 while ((line = br.readLine()) != null){
                     stringBuilder.append(line + "\n");
                 }
-
-                JSONObject jsonObject = new JSONObject(stringBuilder.toString());
-                name = jsonObject.getString("name");
-                display.setText(name);
 
             } catch (Exception e) {
                 e.printStackTrace();
@@ -131,8 +133,25 @@ public class MainActivity extends AppCompatActivity {
             super.onPostExecute(aVoid);
             //Dismiss the progressBar and show the result
             mProgressBar.setVisibility(View.INVISIBLE);
-            //The JSONObject class is giving me a hard time so here I show the JSON formatted data
-            //display.setText(result);
+
+            try {
+                JSONObject jsonObject = new JSONObject(stringBuilder.toString());
+                JSONObject weatherElement = new JSONObject(jsonObject.getString("main"));
+                Double value = Double.parseDouble(weatherElement.getString("temp"));
+                value = value - 273.15;
+                display.setText(jsonObject.getString("name"));
+                myImage.setVisibility(View.VISIBLE);
+                label1.setVisibility(View.VISIBLE);
+                label2.setVisibility(View.VISIBLE);
+                temp.setText(value + "°C");
+                humidity.setText(weatherElement.getString("humidity"));
+                something.setText(weatherElement.getString("pressure"));
+
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
         }
     }
 
@@ -148,6 +167,12 @@ public class MainActivity extends AppCompatActivity {
         //Add action if the refresh button is pressed
         if (item.getItemId() == R.id.action_refresh){
             display.setText("");
+            humidity.setText("");
+            temp.setText("");
+            something.setText("");
+            label2.setVisibility(View.INVISIBLE);
+            label1.setVisibility(View.INVISIBLE);
+            myImage.setVisibility(View.INVISIBLE);
             loadData();
         }
         return super.onOptionsItemSelected(item);

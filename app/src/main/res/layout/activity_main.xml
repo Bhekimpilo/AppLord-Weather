@@ -7,26 +7,85 @@
     android:background="@color/colorPrimary"
     tools:context=".MainActivity">
 
-<ScrollView
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+
     <TextView
-        android:id="@+id/textView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:id="@+id/cityView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="73dp"
+        android:layout_marginTop="24dp"
         android:textColor="#ffffff"
-        android:textSize="24sp"
-        android:hint="Your Data Appears here" />
-</ScrollView>
+        android:textSize="24sp" />
 
-    <ProgressBar
-        android:id="@+id/progressBar"
-        style="?android:attr/progressBarStyle"
-        android:layout_width="46dp"
-        android:layout_height="46dp"
-        android:layout_centerInParent="true"
-        android:visibility="invisible"/>
+    <ImageView
+        android:id="@+id/iconView"
+        android:layout_width="92dp"
+        android:layout_height="92dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="69dp"
+        android:visibility="invisible"
+        app:srcCompat="@drawable/weather_icon" />
+
+    <TextView
+        android:id="@+id/tempView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="188dp"
+        android:textColor="#ffffff"
+        android:textSize="58sp" />
+
+    <TextView
+        android:id="@+id/humidityView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginBottom="136dp"
+        android:layout_marginStart="79dp"
+        android:textColor="#ffffff"
+        android:textSize="22sp" />
+
+    <TextView
+        android:id="@+id/someView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/textView6"
+        android:layout_alignTop="@+id/humidityView"
+        android:textColor="#ffffff"
+        android:textSize="22sp" />
+
+        <ProgressBar
+            android:id="@+id/progressBar"
+            style="?android:attr/progressBarStyle"
+            android:layout_width="46dp"
+            android:layout_height="46dp"
+            android:layout_centerInParent="true"
+            android:visibility="invisible" />
+
+        <TextView
+            android:id="@+id/textView5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/humidityView"
+            android:visibility="invisible"
+            android:layout_alignParentStart="true"
+            android:layout_marginStart="65dp"
+            android:text="Humidity"
+            android:textColor="#ffffff" />
+
+        <TextView
+            android:id="@+id/textView6"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/humidityView"
+            android:visibility="invisible"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="65dp"
+            android:text="Pressure"
+            android:textColor="#ffffff" />
+
 </RelativeLayout>
