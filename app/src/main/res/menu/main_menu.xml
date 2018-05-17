@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <!--Add a refresh button and show it if the screen has enough space-->
+    <item
+        android:title="@string/refresh"
+        android:icon="@drawable/ic_action_refresh"
+        android:id="@+id/action_refresh"
+        app:showAsAction="ifRoom"/>
+
+</menu>
