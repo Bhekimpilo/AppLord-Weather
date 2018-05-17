@@ -1,5 +1,7 @@
 package com.bkay_apps.applordweather;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
@@ -48,6 +50,18 @@ public class MainActivity extends AppCompatActivity {
          **/
         if (networkIsAvailable()){
             loadData();
+        }else{
+            AlertDialog.Builder dialog = new AlertDialog.Builder(MainActivity.this);
+            dialog.setTitle(R.string.errorTitle);
+            dialog.setCancelable(true);
+            dialog.setMessage(R.string.errorMsg);
+            dialog.setNegativeButton("Exit", null);
+            dialog.setPositiveButton("Retry", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    loadData();
+                }
+            });
         }
 
     }
