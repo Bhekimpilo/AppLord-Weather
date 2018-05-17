@@ -139,11 +139,12 @@ public class MainActivity extends AppCompatActivity {
                 JSONObject weatherElement = new JSONObject(jsonObject.getString("main"));
                 Double value = Double.parseDouble(weatherElement.getString("temp"));
                 value = value - 273.15;
+                String adjustedValue = String.format("%.2f", value);
                 display.setText(jsonObject.getString("name"));
                 myImage.setVisibility(View.VISIBLE);
                 label1.setVisibility(View.VISIBLE);
                 label2.setVisibility(View.VISIBLE);
-                temp.setText(value + "°C");
+                temp.setText(adjustedValue + "°C");
                 humidity.setText(weatherElement.getString("humidity"));
                 something.setText(weatherElement.getString("pressure"));
 
