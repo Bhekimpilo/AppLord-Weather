@@ -2,6 +2,7 @@ package com.bkay_apps.applordweather;
 
 import android.Manifest;
 import android.app.AlertDialog;
+import android.app.FragmentManager;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.location.Criteria;
@@ -21,7 +22,11 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.squareup.picasso.Picasso;
+
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -155,6 +160,13 @@ public class MainActivity extends AppCompatActivity {
                 temp.setText(adjustedValue + "°C");
                 humidity.setText(weatherElement.getString("humidity"));
                 something.setText(weatherElement.getString("pressure"));
+
+                JSONArray array = jsonObject.getJSONArray("weather");
+                String iconCode = array.getJSONObject(0).getString("icon");
+                String iconURL = "http://openweathermap.org/img/w/" + iconCode + ".png";;
+                Picasso.with(MainActivity.this).load(iconURL).into(myImage);
+
+
 
 
             } catch (JSONException e) {
