@@ -1,12 +1,20 @@
 package com.bkay_apps.applordweather;
 
+import android.Manifest;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.pm.PackageManager;
+import android.location.Criteria;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -30,6 +38,7 @@ public class MainActivity extends AppCompatActivity {
     ImageView myImage;
     ProgressBar mProgressBar;
     StringBuilder stringBuilder;
+    double lon,lat;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,11 +56,11 @@ public class MainActivity extends AppCompatActivity {
         mProgressBar = findViewById(R.id.progressBar);
 
         /**Check if internet is available and phone has access then
-          *Call the AsyncTask method to run the Http request in the background
+         *Call the AsyncTask method to run the Http request in the background
          **/
-        if (networkIsAvailable()){
+        if (networkIsAvailable()) {
             loadData();
-        }else{
+        } else {
             AlertDialog.Builder dialog = new AlertDialog.Builder(MainActivity.this);
             dialog.setTitle(R.string.errorTitle);
             dialog.setCancelable(true);
@@ -74,24 +83,24 @@ public class MainActivity extends AppCompatActivity {
     }
 
     //this method is do that we don't keep typing out the execute code
-    public void loadData(){
+    public void loadData() {
 
         new FetchDataFromServer().execute();
     }
 
     //Getting info about internet availability and user connectivity
-    public boolean networkIsAvailable(){
+    public boolean networkIsAvailable() {
         ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
 
         boolean isAvailable = false;
-        if (networkInfo != null && networkInfo.isConnected()){
+        if (networkInfo != null && networkInfo.isConnected()) {
             isAvailable = true;
         }
         return isAvailable;
     }
 
-    public class FetchDataFromServer extends AsyncTask<Void, Void, Void>{
+    public class FetchDataFromServer extends AsyncTask<Void, Void, Void> {
 
         String result;
 
@@ -118,7 +127,7 @@ public class MainActivity extends AppCompatActivity {
 
                 String line = "";
 
-                while ((line = br.readLine()) != null){
+                while ((line = br.readLine()) != null) {
                     stringBuilder.append(line + "\n");
                 }
 
@@ -138,8 +147,7 @@ public class MainActivity extends AppCompatActivity {
                 JSONObject jsonObject = new JSONObject(stringBuilder.toString());
                 JSONObject weatherElement = new JSONObject(jsonObject.getString("main"));
                 Double value = Double.parseDouble(weatherElement.getString("temp"));
-                value = value - 273.15;
-                String adjustedValue = String.format("%.2f", value);
+                int adjustedValue = (int) (value - 273.15);
                 display.setText(jsonObject.getString("name"));
                 myImage.setVisibility(View.VISIBLE);
                 label1.setVisibility(View.VISIBLE);
@@ -166,7 +174,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         //Add action if the refresh button is pressed
-        if (item.getItemId() == R.id.action_refresh){
+        if (item.getItemId() == R.id.action_refresh) {
             display.setText("");
             humidity.setText("");
             temp.setText("");
@@ -177,5 +185,7 @@ public class MainActivity extends AppCompatActivity {
             loadData();
         }
         return super.onOptionsItemSelected(item);
+
     }
+
 }
